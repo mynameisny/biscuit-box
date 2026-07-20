@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "Cookie Saver",
+  "version": "1.1.0",
+  "description": "读取指定域名的 Cookie 并通过 Native Messaging 保存到本地，供 AI Agent 或其它自动化工具使用",
+  "permissions": [
+    "cookies",
+    "nativeMessaging",
+    "storage",
+    "tabs",
+    "contextMenus",
+    "notifications",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://*/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Cookie Saver",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["install.html", "install.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}

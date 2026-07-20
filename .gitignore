@@ -1,0 +1,5 @@
+native-host/biscuit-host
+native-host/biscuit-host.exe
+native-host/releases/
+.DS_Store
+*.log

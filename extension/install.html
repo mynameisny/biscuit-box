@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie Saver - 安装 Native Host</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 40px;
+    }
+    h1 {
+      font-size: 28px;
+      color: #1a1a2e;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: #666;
+      font-size: 15px;
+    }
+    .status-box {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .status-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .status-text {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .status-desc {
+      font-size: 14px;
+      color: #666;
+    }
+    .connected {
+      background: #e8f5e9;
+      border: 2px solid #4caf50;
+    }
+    .connected .status-text {
+      color: #2e7d32;
+    }
+    .disconnected {
+      background: #fff3e0;
+      border: 2px solid #ff9800;
+    }
+    .disconnected .status-text {
+      color: #e65100;
+    }
+    .steps {
+      margin-bottom: 24px;
+    }
+    .step {
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .step-number {
+      width: 32px;
+      height: 32px;
+      background: #1a73e8;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    .step-content {
+      flex: 1;
+    }
+    .step-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #1a1a2e;
+    }
+    .step-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+    .download-section {
+      background: #e3f2fd;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .download-btn {
+      display: inline-block;
+      background: #1a73e8;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: background 0.2s;
+      margin: 8px;
+    }
+    .download-btn:hover {
+      background: #1557b0;
+    }
+    .download-btn.secondary {
+      background: #6c757d;
+    }
+    .download-btn.secondary:hover {
+      background: #5a6268;
+    }
+    .os-info {
+      font-size: 13px;
+      color: #666;
+      margin-top: 12px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+    button {
+      padding: 12px 28px;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #1a73e8;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #1557b0;
+    }
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+    .btn-secondary:hover {
+      background: #bdbdbd;
+    }
+    .code-block {
+      background: #263238;
+      color: #aed581;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      margin: 12px 0;
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.6;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="icon">🍪</div>
+      <h1>Cookie Saver</h1>
+      <p class="subtitle">Native Host 安装向导</p>
+    </div>
+
+    <div id="statusBox" class="status-box disconnected">
+      <div class="status-icon" id="statusIcon">⚠️</div>
+      <div class="status-text" id="statusText">正在检测 Native Host...</div>
+      <div class="status-desc" id="statusDesc">请稍候</div>
+    </div>
+
+    <div id="installGuide" class="hidden">
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <div class="step-title">下载 Native Host</div>
+            <div class="step-desc">根据您的操作系统下载对应的安装包</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <div class="step-title">运行安装脚本</div>
+            <div class="step-desc">解压后运行安装脚本，按提示操作</div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <div class="step-title">重新加载扩展</div>
+            <div class="step-desc">安装完成后，点击下方按钮重新检测连接状态</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="download-section">
+        <div id="downloadButtons">
+          <a href="#" class="download-btn" id="downloadMac">下载 macOS 版本</a>
+          <a href="#" class="download-btn secondary" id="downloadLinux">下载 Linux 版本</a>
+          <a href="#" class="download-btn secondary" id="downloadWindows">下载 Windows 版本</a>
+        </div>
+        <div class="os-info" id="osInfo"></div>
+      </div>
+
+      <div class="step">
+        <div class="step-number">💡</div>
+        <div class="step-content">
+          <div class="step-title">安装命令参考</div>
+          <div class="code-block" id="installCommand">
+# macOS / Linux
+cd native-host
+chmod +x setup.sh
+./setup.sh
+
+# Windows
+cd native-host
+setup.bat
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button id="recheckBtn" class="btn-primary">重新检测</button>
+      <button id="closeBtn" class="btn-secondary">关闭</button>
+    </div>
+  </div>
+
+  <script src="install.js"></script>
+</body>
+</html>

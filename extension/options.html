@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f2f5;
+    }
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 28px 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    h1 {
+      font-size: 20px;
+      color: #1a1a2e;
+      margin: 0 0 6px 0;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: #666;
+      margin: 0 0 24px 0;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    .hint {
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+    }
+    input[type="text"]:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 2px rgba(26,115,232,0.15);
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+    button {
+      padding: 10px 28px;
+      font-size: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-primary {
+      background: #1a73e8;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #1557b0;
+    }
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+    .btn-secondary:hover {
+      background: #bdbdbd;
+    }
+    .message {
+      margin-top: 16px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: none;
+    }
+    .message.success {
+      display: block;
+      background: #e8f5e9;
+      border: 1px solid #4caf50;
+      color: #2e7d32;
+    }
+    .message.error {
+      display: block;
+      background: #ffebee;
+      border: 1px solid #f44336;
+      color: #c62828;
+    }
+    .footer {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #999;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>Cookie Saver 设置</h1>
+      <p class="subtitle">配置要读取的域名和 Cookie 键名</p>
+
+      <div class="form-group">
+        <label for="domain">域名</label>
+        <input type="text" id="domain" placeholder="例如: example.com" />
+        <div class="hint">不包含 http:// 或 https:// 前缀</div>
+      </div>
+
+      <div class="form-group">
+        <label for="cookieName">Cookie 键名</label>
+        <input type="text" id="cookieName" placeholder="例如: session_token" />
+        <div class="hint">需要保存的 Cookie 名称</div>
+      </div>
+
+      <div class="form-group">
+        <label for="savePath">保存路径（可选）</label>
+        <input type="text" id="savePath" placeholder="留空使用默认路径" />
+        <div class="hint">自定义完整文件路径，留空则默认保存到 ~/.caches/biscuit/{Cookie键名}</div>
+      </div>
+
+      <div class="btn-row">
+        <button id="saveBtn" class="btn-primary">保存</button>
+        <button id="resetBtn" class="btn-secondary">恢复默认</button>
+      </div>
+
+      <div id="message" class="message"></div>
+    </div>
+    <div class="footer">Cookie Saver v1.1.0</div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
