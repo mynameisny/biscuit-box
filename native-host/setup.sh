@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Cookie Saver - 一键设置脚本
-# 编译 Go 二进制 + 安装 Native Messaging Host manifest
+# 安装 Native Messaging Host manifest
 #
 
 set -e
@@ -13,17 +13,22 @@ echo "=============================="
 echo " Cookie Saver - 一键设置"
 echo "=============================="
 
-# 1. 编译
+# 1. 检查二进制文件
 echo ""
-echo "[1/3] 编译 Go 二进制..."
-export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
-if command -v go &>/dev/null; then
+echo "[1/3] 检查二进制文件..."
+if [ -f "$BINARY" ]; then
+    chmod +x "$BINARY"
+    echo "  ✅ 二进制已存在: $BINARY ($(du -h "$BINARY" | cut -f1))"
+elif command -v go &>/dev/null; then
+    echo "  ⚠️  未找到预编译二进制，尝试从源码编译..."
+    export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
     cd "$SCRIPT_DIR"
     go build -ldflags="-s -w" -o "$BINARY" .
     chmod +x "$BINARY"
-    echo "  ✅ 二进制: $BINARY ($(du -h "$BINARY" | cut -f1))"
+    echo "  ✅ 编译完成: $BINARY ($(du -h "$BINARY" | cut -f1))"
 else
-    echo "  ❌ 未找到 go，请先安装: https://go.dev/dl/"
+    echo "  ❌ 未找到二进制文件且未安装 Go 编译器"
+    echo "  请从 GitHub Releases 下载包含预编译二进制的安装包"
     exit 1
 fi
 

@@ -1,19 +1,28 @@
-// 检测操作系统
+// 检测操作系统和架构
 function detectOS() {
   const userAgent = navigator.userAgent.toLowerCase();
-  if (userAgent.includes('mac')) return 'mac';
+  const platform = navigator.platform.toLowerCase();
+  
+  if (userAgent.includes('mac')) {
+    // 检测 Apple Silicon (arm64) 还是 Intel (amd64)
+    if (platform.includes('arm') || platform.includes('aarch64')) {
+      return 'mac';
+    }
+    return 'macIntel';
+  }
   if (userAgent.includes('win')) return 'windows';
   if (userAgent.includes('linux')) return 'linux';
   return 'unknown';
 }
 
-// 获取下载链接（这里使用 GitHub Releases 的占位链接，实际部署时需要替换）
+// 获取下载链接
 function getDownloadLinks() {
   const baseUrl = 'https://github.com/mynameisny/biscuit-box/releases/latest/download';
   return {
-    mac: `${baseUrl}/biscuit-box-macos.zip`,
-    windows: `${baseUrl}/biscuit-box-windows.zip`,
-    linux: `${baseUrl}/biscuit-box-linux.zip`
+    mac: `${baseUrl}/biscuit-box-macos-arm64.tar.gz`,
+    macIntel: `${baseUrl}/biscuit-box-macos-amd64.tar.gz`,
+    windows: `${baseUrl}/biscuit-box-windows-amd64.zip`,
+    linux: `${baseUrl}/biscuit-box-linux-amd64.tar.gz`
   };
 }
 
@@ -56,7 +65,8 @@ function initDownloadButtons() {
   const osInfo = document.getElementById('osInfo');
   
   const osNames = {
-    mac: 'macOS',
+    mac: 'macOS (Apple Silicon)',
+    macIntel: 'macOS (Intel)',
     windows: 'Windows',
     linux: 'Linux'
   };
@@ -71,6 +81,7 @@ function initDownloadButtons() {
   // 高亮当前操作系统的下载按钮
   const buttons = {
     mac: document.getElementById('downloadMac'),
+    macIntel: document.getElementById('downloadMac'),
     windows: document.getElementById('downloadWindows'),
     linux: document.getElementById('downloadLinux')
   };
