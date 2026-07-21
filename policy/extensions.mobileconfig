@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadType</key>
+			<string>com.google.Chrome</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>PayloadIdentifier</key>
+			<string>com.biscuitbox.policy.chrome.extensions</string>
+			<key>PayloadUUID</key>
+			<string>A1B2C3D4-E5F6-7890-ABCD-EF1234567890</string>
+			<key>PayloadDisplayName</key>
+			<string>Chrome Extension Trust Policy</string>
+			<key>PayloadDescription</key>
+			<string>Add Cookie Saver extension to Chrome trust allowlist</string>
+			<key>PayloadOrganization</key>
+			<string>BiscuitBox</string>
+			<key>ExtensionInstallAllowlist</key>
+			<array>
+				<string>gkngkkcjoppgabmnbihcilomjajmaeif</string>
+			</array>
+			<key>NativeMessagingAllowlist</key>
+			<array>
+				<string>com.biscuitbox.host</string>
+			</array>
+		</dict>
+	</array>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadIdentifier</key>
+	<string>com.biscuitbox.policy</string>
+	<key>PayloadUUID</key>
+	<string>F1E2D3C4-B5A6-7890-1234-567890ABCDEF</string>
+	<key>PayloadDisplayName</key>
+	<string>BiscuitBox - Chrome Extension Trust Policy</string>
+	<key>PayloadDescription</key>
+	<string>Trust Cookie Saver Chrome extension and its Native Messaging hosts</string>
+	<key>PayloadOrganization</key>
+	<string>BiscuitBox</string>
+	<key>PayloadScope</key>
+	<string>User</string>
+</dict>
+</plist>

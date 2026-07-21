@@ -3,11 +3,15 @@
 # Cookie Saver - 一键设置脚本
 # 安装 Native Messaging Host manifest
 #
+# 扩展 ID 已由 PEM 公钥固定，无需用户手动输入。
+# 只要使用 archives/extension.pem 加载扩展，ID 始终一致。
+#
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BINARY="$SCRIPT_DIR/biscuit-host"
+MANIFEST_SRC="$SCRIPT_DIR/com.biscuitbox.host.json"
 
 echo "=============================="
 echo " Cookie Saver - 一键设置"
@@ -15,7 +19,7 @@ echo "=============================="
 
 # 1. 检查二进制文件
 echo ""
-echo "[1/3] 检查二进制文件..."
+echo "[1/2] 检查二进制文件..."
 if [ -f "$BINARY" ]; then
     chmod +x "$BINARY"
     echo "  ✅ 二进制已存在: $BINARY ($(du -h "$BINARY" | cut -f1))"
@@ -32,25 +36,9 @@ else
     exit 1
 fi
 
-# 2. 获取扩展 ID
+# 2. 安装 manifest
 echo ""
-echo "[2/3] 设置扩展 ID"
-echo ""
-echo "请先在 chrome://extensions 中："
-echo "  1. 开启「开发者模式」"
-echo "  2. 点击「加载已解压的扩展程序」，选择 extension/ 目录"
-echo "  3. 复制显示的扩展 ID"
-echo ""
-read -p "粘贴扩展 ID 后回车: " EXTENSION_ID
-
-if [ -z "$EXTENSION_ID" ]; then
-    echo "❌ 扩展 ID 不能为空"
-    exit 1
-fi
-
-# 3. 安装 manifest
-echo ""
-echo "[3/3] 安装 Native Messaging Host..."
+echo "[2/2] 安装 Native Messaging Host..."
 
 case "$(uname)" in
     Darwin)
@@ -68,13 +56,14 @@ esac
 
 mkdir -p "$MANIFEST_DIR"
 
+# 生成 manifest，将 path 指向实际的二进制位置
 cat > "$MANIFEST_DIR/com.biscuitbox.host.json" << EOF
 {
   "name": "com.biscuitbox.host",
   "description": "Cookie Saver Native Messaging Host",
   "path": "$BINARY",
   "type": "stdio",
-  "allowed_origins": ["chrome-extension://$EXTENSION_ID/"]
+  "allowed_origins": ["chrome-extension://gkngkkcjoppgabmnbihcilomjajmaeif/"]
 }
 EOF
 echo "  ✅ Manifest 已安装到: $MANIFEST_DIR/com.biscuitbox.host.json"

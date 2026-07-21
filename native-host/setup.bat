@@ -6,45 +6,34 @@ echo  Cookie Saver - Windows 安装脚本
 echo ==============================
 echo.
 
-:: 检查 Go 是否安装
-where go >nul 2>nul
-if %errorlevel% neq 0 (
-    echo [错误] 未找到 Go 编译器
-    echo 请先安装 Go: https://go.dev/dl/
+:: 检查 Go 是否安装（仅在没有预编译二进制时需要）
+if not exist "%~dp0biscuit-host.exe" (
+    where go >nul 2>nul
+    if %errorlevel% neq 0 (
+        echo [错误] 未找到 biscuit-host.exe 且未安装 Go 编译器
+        echo 请先安装 Go: https://go.dev/dl/
+        echo.
+        pause
+        exit /b 1
+    )
+
+    echo [1/2] 编译 Native Host...
+    cd /d "%~dp0"
+    go build -ldflags="-s -w" -o biscuit-host.exe .
+    if %errorlevel% neq 0 (
+        echo [错误] 编译失败
+        pause
+        exit /b 1
+    )
+    echo   编译成功: biscuit-host.exe
     echo.
-    pause
-    exit /b 1
+) else (
+    echo [1/2] 二进制文件已存在: biscuit-host.exe
+    echo.
 )
 
-echo [1/3] 编译 Native Host...
-cd /d "%~dp0"
-go build -ldflags="-s -w" -o biscuit-host.exe .
-if %errorlevel% neq 0 (
-    echo [错误] 编译失败
-    pause
-    exit /b 1
-)
-echo   编译成功: biscuit-host.exe
-echo.
-
-:: 获取扩展 ID
-echo [2/3] 设置扩展 ID
-echo.
-echo 请先在 chrome://extensions 中：
-echo   1. 开启「开发者模式」
-echo   2. 点击「加载已解压的扩展程序」，选择 extension/ 目录
-echo   3. 复制显示的扩展 ID
-echo.
-set /p EXTENSION_ID="粘贴扩展 ID 后回车: "
-
-if "%EXTENSION_ID%"=="" (
-    echo [错误] 扩展 ID 不能为空
-    pause
-    exit /b 1
-)
-
-:: 创建 manifest 文件
-echo [3/3] 安装 Native Messaging Host...
+:: 创建 manifest 文件（扩展 ID 已由 PEM 公钥固定）
+echo [2/2] 安装 Native Messaging Host...
 
 set "MANIFEST_DIR=%LOCALAPPDATA%\Google\Chrome\User Data\NativeMessagingHosts"
 if not exist "%MANIFEST_DIR%" mkdir "%MANIFEST_DIR%"
@@ -58,7 +47,7 @@ echo   "name": "com.biscuitbox.host",
 echo   "description": "Cookie Saver Native Messaging Host",
 echo   "path": "%BINARY_PATH%",
 echo   "type": "stdio",
-echo   "allowed_origins": ["chrome-extension://%EXTENSION_ID%/"]
+echo   "allowed_origins": ["chrome-extension://gkngkkcjoppgabmnbihcilomjajmaeif/"]
 echo }
 ) > "%MANIFEST_DIR%\com.biscuitbox.host.json"
 

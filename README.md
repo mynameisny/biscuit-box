@@ -47,7 +47,9 @@ Chrome 扩展 + Native Messaging Host（Go 实现），读取指定域名的 Coo
 2. 解压后运行安装脚本：
    - macOS/Linux: `chmod +x setup.sh && ./setup.sh`
    - Windows: 双击 `setup.bat`
-3. 在 Chrome 中安装扩展（开发者模式 → 加载已解压的扩展程序）
+3. 在 Chrome 中安装扩展（开发者模式 → 加载已解压的扩展程序，使用 `archives/extension.pem` 打包）
+
+> **注意：** 扩展 ID 由 `archives/extension.pem` 公钥决定，安装时必须使用该 PEM 文件打包，ID 才能与 Native Host manifest 匹配。
 
 ### 方式二：从源码构建
 
@@ -58,12 +60,12 @@ go build -ldflags="-s -w" -o biscuit-host .
 ./setup.sh
 
 # 加载扩展
-# chrome://extensions → 开发者模式 → 加载 extension/ 目录
+# chrome://extensions → 开发者模式 → 加载 extension/ 目录（使用 archives/extension.pem 打包）
 ```
 
 ### 方式三：仅安装扩展（自动引导安装 Native Host）
 
-1. 在 Chrome 中安装扩展
+1. 在 Chrome 中安装扩展（使用 `archives/extension.pem` 打包）
 2. 首次使用时，扩展会自动检测 Native Host 是否安装
 3. 如果未安装，会自动打开安装引导页面
 4. 按页面提示下载并安装 Native Host
