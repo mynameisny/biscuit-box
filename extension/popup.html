@@ -144,7 +144,7 @@
 
     <div id="hostWarning" class="warning-box hidden">
       <div class="warning-title">⚠️ Native Host 未安装</div>
-      <div class="warning-desc">需要安装 Native Host 才能保存 Cookie 到本地</div>
+      <div class="warning-desc">无法保存到本地文件，但可以读取 Cookie 并复制到剪贴板</div>
       <button id="installBtn" class="btn-primary">安装 Native Host</button>
     </div>
 
@@ -152,10 +152,11 @@
       <div>正在加载配置...</div>
     </div>
 
-    <div id="status" class="status info">点击按钮读取并保存 Cookie</div>
+    <div id="status" class="status info">点击按钮读取 Cookie</div>
 
     <div class="btn-row">
       <button id="saveBtn" class="btn-primary">保存 Cookie</button>
+      <button id="copyBtn" class="btn-secondary">复制 Cookie</button>
       <button id="settingsBtn" class="btn-secondary">设置</button>
     </div>
   </div>

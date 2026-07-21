@@ -2,6 +2,5 @@ native-host/biscuit-host
 native-host/biscuit-host.exe
 native-host/cookie_save_host
 native-host/releases/
-archives/extension.crx
 .DS_Store
 *.log

@@ -22,8 +22,20 @@ chrome.runtime.onInstalled.addListener(() => {
 async function createContextMenu() {
   const config = await getConfig();
   chrome.contextMenus.create({
+    id: "cookieSaver",
+    title: "Cookie Saver",
+    contexts: ["page"],
+  });
+  chrome.contextMenus.create({
     id: "saveCookie",
+    parentId: "cookieSaver",
     title: `保存 Cookie(${config.cookieName}) 到本地`,
+    contexts: ["page"],
+  });
+  chrome.contextMenus.create({
+    id: "copyCookie",
+    parentId: "cookieSaver",
+    title: `复制 Cookie(${config.cookieName}) 到剪贴板`,
     contexts: ["page"],
   });
 }
@@ -40,6 +52,9 @@ chrome.storage.onChanged.addListener((changes) => {
 chrome.contextMenus.onClicked.addListener((info) => {
   if (info.menuItemId === "saveCookie") {
     handleContextMenuSave();
+  }
+  if (info.menuItemId === "copyCookie") {
+    handleContextMenuCopy();
   }
 });
 
@@ -205,66 +220,89 @@ function showErrorNotification(errorMessage) {
   }
 }
 
-async function handleContextMenuSave() {
-  const result = await saveCookie();
+async function showToast(tab, icon, text, color) {
+  if (!tab || !tab.id) return;
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: (icon, text, color) => {
+        const existing = document.getElementById("cookie-saver-toast");
+        if (existing) existing.remove();
 
-  // 在当前页面注入 Toast 提示
-  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
-  if (tab && tab.id) {
-    const icon = result.success ? "✅" : "❌";
-    const text = result.success
-      ? `Cookie 已保存到本地`
-      : result.error;
-    const color = result.success ? "#4caf50" : "#f44336";
+        const toast = document.createElement("div");
+        toast.id = "cookie-saver-toast";
+        toast.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 2147483647;
+          background: ${color};
+          color: #fff;
+          padding: 24px 36px;
+          border-radius: 12px;
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-size: 16px;
+          line-height: 1.5;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+          max-width: 400px;
+          word-break: break-all;
+          opacity: 1;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+          text-align: center;
+        `;
+        toast.textContent = `${icon} ${text}`;
+        document.body.appendChild(toast);
 
-    try {
-      await chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: (icon, text, color) => {
-          const existing = document.getElementById("cookie-saver-toast");
-          if (existing) existing.remove();
-
-          const toast = document.createElement("div");
-          toast.id = "cookie-saver-toast";
-          toast.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2147483647;
-            background: ${color};
-            color: #fff;
-            padding: 24px 36px;
-            border-radius: 12px;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            font-size: 16px;
-            line-height: 1.5;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            max-width: 400px;
-            word-break: break-all;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            text-align: center;
-          `;
-          toast.textContent = `${icon} ${text}`;
-          document.body.appendChild(toast);
-
-          setTimeout(() => {
-            toast.style.opacity = "0";
-            setTimeout(() => toast.remove(), 300);
-          }, 3000);
-        },
-        args: [icon, text, color],
-      });
-    } catch (e) {
-      // 注入失败（如页面无权限）则回退到徽章和通知
-    }
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          setTimeout(() => toast.remove(), 300);
+        }, 3000);
+      },
+      args: [icon, text, color],
+    });
+  } catch (e) {
+    // 注入失败则回退到徽章和通知
   }
+}
+
+async function handleContextMenuCopy() {
+  const result = await readCookie();
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
 
   if (result.success) {
+    // 通过注入脚本复制到剪贴板
+    if (tab && tab.id) {
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: (value) => {
+            navigator.clipboard.writeText(value);
+          },
+          args: [result.value],
+        });
+      } catch (e) {
+        // 静默失败
+      }
+    }
+    showToast(tab, "✅", "Cookie 已复制到剪贴板", "#4caf50");
+    showNotification("Cookie Saver", "Cookie 已复制到剪贴板");
+  } else {
+    showToast(tab, "❌", result.error, "#f44336");
+    showErrorNotification(result.error);
+  }
+}
+
+async function handleContextMenuSave() {
+  const result = await saveCookie();
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+
+  if (result.success) {
+    showToast(tab, "✅", "Cookie 已保存到本地", "#4caf50");
     showNotification("Cookie Saver", result.message.replace("Cookie 已保存到: ", ""));
   } else {
+    showToast(tab, "❌", result.error, "#f44336");
     showErrorNotification(result.error);
   }
 }

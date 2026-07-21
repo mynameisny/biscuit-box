@@ -195,6 +195,53 @@
       white-space: pre;
       line-height: 1.6;
     }
+    .info-box {
+      background: #e8f5e9;
+      border: 1px solid #a5d6a7;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .info-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2e7d32;
+      margin-bottom: 12px;
+    }
+    .info-content {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.6;
+    }
+    .info-content p {
+      margin: 0 0 8px 0;
+    }
+    .info-content ul {
+      margin: 4px 0 0 0;
+      padding-left: 20px;
+    }
+    .info-content li {
+      margin-bottom: 4px;
+    }
+    .section-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 20px 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .section-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+      color: #fff;
+    }
+    .section-header p {
+      font-size: 14px;
+      color: rgba(255,255,255,0.9);
+      margin: 8px 0 0 0;
+    }
     .hidden {
       display: none;
     }
@@ -205,13 +252,34 @@
     <div class="header">
       <div class="icon">🍪</div>
       <h1>Cookie Saver</h1>
-      <p class="subtitle">Native Host 安装向导</p>
+    </div>
+
+    <div class="info-box">
+      <div class="info-title">💡 扩展已经可以使用了！</div>
+      <div class="info-content">
+        <p>Cookie Saver 扩展本身已经可以正常工作：</p>
+        <ul>
+          <li><strong>读取 Cookie</strong> — 从指定域名读取配置的 Cookie</li>
+          <li><strong>复制到剪贴板</strong> — 一键复制 Cookie 值，方便粘贴使用</li>
+        </ul>
+        <p style="margin-top: 12px;">Native Host 是一个可选的本地组件，安装后可以：</p>
+        <ul>
+          <li><strong>自动保存到本地文件</strong> — Cookie 值自动写入本地，供 AI 工具或脚本读取</li>
+          <li><strong>无需手动复制</strong> — 右键菜单一键保存，AI 自动化更便捷</li>
+        </ul>
+        <p style="margin-top: 12px; color: #888; font-size: 13px;">如果您只需要手动复制 Cookie，可以跳过此步骤，直接关闭本页面使用扩展。</p>
+      </div>
     </div>
 
     <div id="statusBox" class="status-box disconnected">
       <div class="status-icon" id="statusIcon">⚠️</div>
       <div class="status-text" id="statusText">正在检测 Native Host...</div>
       <div class="status-desc" id="statusDesc">请稍候</div>
+    </div>
+
+    <div class="section-header">
+      <h2>🔧 Native Host 安装向导</h2>
+      <p>可选：安装后可自动保存 Cookie 到本地文件</p>
     </div>
 
     <div id="installGuide" class="hidden">
